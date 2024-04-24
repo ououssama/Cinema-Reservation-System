@@ -1,5 +1,7 @@
 import { Reservation } from "./reservation";
 import { useState, useEffect, useRef } from "react";
+import Toast from "./Widgets/toast";
+
 export function Hall(props) {
   //TODO: change data structure for seats reservation to contains seat resevation id and person who reserve seat
   const [seat, setSeat] = useState({ resId: "H1T1", user: 1 });
@@ -63,7 +65,7 @@ export function Hall(props) {
           newValue = myArray.splice(
             i,
             seatCollection.length,
-            ...seatCollection
+            ...seatCollection,
           );
         }
         break;
@@ -97,7 +99,7 @@ export function Hall(props) {
       for (let i = 0; i < seatCollection.Seats.length; i++) {
         console.log(
           "Seat Collection a",
-          seatCollection.Seats[i].resId !== resId
+          seatCollection.Seats[i].resId !== resId,
         );
         if (seatCollection.Seats[i].resId !== resId) {
           console.log("Seat Collection filtred", seatCollection.Seats[i]);
@@ -120,6 +122,7 @@ export function Hall(props) {
 
   return (
     <div className="hall-container">
+      <Toast visible={false} message="Account created" />
       <p>Hall: {props.hallId}</p>
       <div className="screen"></div>
       <div className="seats-wrapper">
@@ -204,12 +207,12 @@ export function Hall(props) {
                 className={`seat ${
                   seatCollection?.Seats &&
                   seatCollection?.Seats.some(
-                    (e) => e.resId == "H" + props.hallId + "T" + seat
+                    (e) => e.resId == "H" + props.hallId + "T" + seat,
                   )
                     ? seatCollection?.Seats.some(
                         (e) =>
                           e.user === props.currentUser &&
-                          e.resId === "H" + props.hallId + "T" + seat
+                          e.resId === "H" + props.hallId + "T" + seat,
                       )
                       ? " select"
                       : " disable"

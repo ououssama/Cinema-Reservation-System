@@ -7,6 +7,7 @@
   --button-blue-500: rgb(50, 141, 246);
   --button-blue-300: rgb(72, 156, 251);
   --button-blue-600: rgb(46, 130, 226);
+  --button-blue-Shadow: hsla(212, 76%, 20%, 0.2);
 }
 
 .hidden {
@@ -147,7 +148,9 @@
   width: fit-content;
   background-color: #fafafa;
   border: hwb(0 95% 5%) 2px solid;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.09), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.09),
+    0 6px 20px 0 rgba(0, 0, 0, 0.05);
   padding: 15px 20px;
   border-radius: 20px;
   opacity: 1;
@@ -213,7 +216,9 @@
   width: fit-content;
   background-color: #fafafa;
   border: hwb(0 95% 5%) 2px solid;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.09), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.09),
+    0 6px 20px 0 rgba(0, 0, 0, 0.05);
   padding: 35px;
   border-radius: 15px;
 }
@@ -250,7 +255,9 @@
   width: fit-content;
   background-color: #fafafa;
   border: hwb(0 95% 5%) 2px solid;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.09), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.09),
+    0 6px 20px 0 rgba(0, 0, 0, 0.05);
   border-radius: 15px;
   padding: 8px;
 }
@@ -344,4 +351,61 @@
 .close-btn > #line-b {
   position: absolute;
   rotate: 45deg;
+}
+
+.toast {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: none;
+  box-shadow: var(--button-blue-Shadow) 0px 7px 29px 0px;
+  transition: all 0.5s;
+}
+
+.toast-container {
+  background-color: var(--button-blue-500);
+  width: 250px;
+  height: 50px;
+}
+
+.toast-header {
+  position: relative;
+  width: 100%;
+  height: 2px;
+}
+
+.toast-header > .progress-bar-path {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.toast-header > .progress-bar-fill {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+  animation-name: fill-progress-bar;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+  animation-duration: 3s;
+}
+
+@keyframes fill-progress-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.toast-body > p {
+  text-align: left;
+  color: white;
+  padding: 0 15px;
 }

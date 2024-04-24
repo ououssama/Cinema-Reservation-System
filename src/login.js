@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Auth from "./auth";
-
 export default function Login(props) {
   const [form, setForm] = useState();
   const [auth, setAuth] = Auth();
