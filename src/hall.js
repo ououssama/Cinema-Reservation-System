@@ -5,6 +5,11 @@ import Toast from "./Widgets/toast";
 export function Hall(props) {
   //TODO: change data structure for seats reservation to contains seat resevation id and person who reserve seat
   const [seat, setSeat] = useState({ resId: "H1T1", user: 1 });
+  const [bottomSeat, setBottomSeat] = useState([
+    new Array(21),
+    new Array(21),
+    new Array(21),
+  ]);
   const [topSeat, setTopSeat] = useState(new Array(18));
   const [seatCollection, setSeatCollection] = useState(() => {
     const dataStorage = localStorage.getItem("seat_number");
@@ -53,34 +58,6 @@ export function Hall(props) {
     updateSeats(myArray);
   };
 
-  useEffect(() => {
-    // console.log(seat);
-    document.querySelector(".reservation-container").classList.remove("lock");
-    document.querySelector(".reservation-container").classList.add("hidden");
-    const myArray = new Array(...topSeat);
-    for (let i = 0; i < topSeat.length; i++) {
-      if (topSeat[i] === undefined) {
-        let newValue;
-        if (seatCollection.length) {
-          newValue = myArray.splice(
-            i,
-            seatCollection.length,
-            ...seatCollection,
-          );
-        }
-        break;
-      }
-    }
-
-    setTopSeat(myArray);
-  }, [seat]);
-
-  useEffect(() => {
-    localStorage.setItem("seat_number", JSON.stringify(seatCollection));
-    reserveSeat(topSeat, setTopSeat, seat);
-    //console.log("top seat", seatCollection.Seats.some(e => e.user ===0));
-  }, [seatCollection]);
-
   const selectSet = (data) => {
     // if (seatCollection?.find(elem => elem == data)) {
     setSeatCollection((prev) => ({ Seats: [...prev.Seats, data] }));
@@ -112,89 +89,72 @@ export function Hall(props) {
     setSeatCollection({ Seats: modifiedArray });
   };
 
-  // const unlockResDialog = () => {
-  //   document.querySelector(".reservation-container").classList.remove("lock");
-  //   document.querySelector(".reservation-container").classList.add("hidden");
-  // };
-  // useEffect(() => {
-  //   document.querySelector(".reservation-container").classList.remove("lock");
-  // }, [seat]);
+  useEffect(() => {
+    console.log(bottomSeat);
+  }, []);
+
+  useEffect(() => {
+    // console.log(seat);
+    document.querySelector(".reservation-container").classList.remove("lock");
+    document.querySelector(".reservation-container").classList.add("hidden");
+
+    const myArray = new Array(...topSeat);
+    for (let i = 0; i < topSeat.length; i++) {
+      if (topSeat[i] === undefined) {
+        let newValue;
+        if (seatCollection.length) {
+          newValue = myArray.splice(
+            i,
+            seatCollection.length,
+            ...seatCollection,
+          );
+        }
+        break;
+      }
+    }
+
+    setTopSeat(myArray);
+  }, [seat]);
+
+  useEffect(() => {
+    localStorage.setItem("seat_number", JSON.stringify(seatCollection));
+    reserveSeat(topSeat, setTopSeat, seat);
+    //console.log("top seat", seatCollection.Seats.some(e => e.user ===0));
+  }, [seatCollection]);
 
   return (
     <div className="hall-container">
-      <Toast visible={false} message="Account created" />
+      <Toast visible={props.isUserAdded} message="Account created" />
       <p>Hall: {props.hallId}</p>
       <div className="screen"></div>
       <div className="seats-wrapper">
         <div className="seat-bottom">
-          <div className="seats-group">
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
+          <div id="A" className="seats-group">
+            {[...bottomSeat[0].keys()].map((seat, i) => (
+              <div
+                key={i}
+                id={`H${props.hallId}B${seat}-A`}
+                className="seat"
+              ></div>
+            ))}
           </div>
-          <div className="seats-group">
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
+          <div id="B" className="seats-group">
+            {[...bottomSeat[1].keys()].map((seat, i) => (
+              <div
+                key={i}
+                id={`H${props.hallId}B${seat}-B`}
+                className="seat"
+              ></div>
+            ))}
           </div>
-          <div className="seats-group">
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
+          <div id="C" className="seats-group">
+            {[...bottomSeat[2].keys()].map((seat, i) => (
+              <div
+                key={i}
+                id={`H${props.hallId}B${seat}-C`}
+                className="seat"
+              ></div>
+            ))}
           </div>
         </div>
         <div className="seat-top">
@@ -202,7 +162,6 @@ export function Hall(props) {
             {[...topSeat.keys()]?.map((seat) => (
               <div
                 key={seat}
-                style={{ fontSize: "6px" }}
                 id={`H${props.hallId}T${seat}`}
                 className={`seat ${
                   seatCollection?.Seats &&
