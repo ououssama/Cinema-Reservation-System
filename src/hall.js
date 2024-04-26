@@ -22,7 +22,9 @@ export function Hall(props) {
 
   // this function run when a seat is reserved and it disable the seat element and change the color
   const lockResDialog = () => {
-    // console.log(document.querySelector(".seat"));
+    document
+      .querySelectorAll(".seat")
+      .forEach((elem) => (elem.style.backgroundColor = "#ababab"));
     if (
       !document
         .querySelector(".reservation-container")
@@ -35,6 +37,9 @@ export function Hall(props) {
             ? (elem.style.backgroundColor = "#ababab")
             : null
         ); */
+      document
+        .querySelectorAll(".seat")
+        .forEach((elem) => (elem.style.backgroundColor = ""));
       document.getElementById(seat.resId).style.backgroundColor = "#8b8b8b";
       document.querySelector(".reservation-container").classList.add("lock");
       document
@@ -67,19 +72,13 @@ export function Hall(props) {
     // localStorage.removeItem("seat_number");
   };
 
-  const cancelSeat = (resId) => {
+  const cancelSeat = (resId, seatPosition, seatGroup = null) => {
     console.log("resId", resId);
     let modifiedArray;
     const filtredSeat = () => {
       let newArray = [];
-      console.log("before loop");
       for (let i = 0; i < seatCollection.Seats.length; i++) {
-        console.log(
-          "Seat Collection a",
-          seatCollection.Seats[i].resId !== resId,
-        );
         if (seatCollection.Seats[i].resId !== resId) {
-          console.log("Seat Collection filtred", seatCollection.Seats[i]);
           newArray.push(seatCollection.Seats[i]);
         }
       }

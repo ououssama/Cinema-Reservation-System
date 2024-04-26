@@ -50,6 +50,29 @@ export function Reservation(props) {
     };
   }, [props.seat]);
 
+  useEffect(() => {
+    const outsideClick = (e) => {
+      if (
+        resContainer.current &&
+        !resContainer.current.contains(e.target) &&
+        !e.target.classList.contains("seat")
+      ) {
+        console.log("hidden");
+        resContainer.current.classList.add("hidden");
+        resContainer.current.classList.remove("lock");
+        console.log("Seat reservation Reference", props.seat.resId);
+        document.getElementById(props.seat.resId).style.backgroundColor =
+          "#ababab";
+      }
+    };
+
+    document.addEventListener("click", outsideClick);
+
+    return () => {
+      document.removeEventListener("click", outsideClick);
+    };
+  }, [resContainer, props.seat]);
+
   return (
     <div
       ref={resContainer}
