@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Auth from "./auth";
-
-export default function Login(props) {
+export default function Register(props) {
   const [form, setForm] = useState();
   const [auth, setAuth] = Auth();
 
   const Register = (e) => {
     e.preventDefault();
     setAuth({ Users: form });
+    props.triggerAddedUser({ isUserAdded: true });
   };
 
   const handleChange = (e) => {
@@ -17,9 +17,13 @@ export default function Login(props) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => {
+    console.log("loginVisibility", props.visibility);
+  }, [props.visibility]);
+
   return (
-    <div className={`login ${props.visibility}`}>
-      <div className="close-btn" onClick={() => props.close("hidden")}>
+    <div className={`login ${props.visibility ? "" : "hidden"}`}>
+      <div className="close-btn" onClick={() => props.close(true)}>
         <div id="line-t"></div>
         <div id="line-b"></div>
       </div>

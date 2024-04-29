@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 
-const initialState = { Users: [] };
+const initialState = { Users: [{
+  id: 1,
+  firstName: "oussama",
+  lastName: "oussama",
+  email: "user@gmail.com",
+  password: "1234",
+}] };
+
 export default function Auth(payload) {
   const [state, setState] = useState(() => {
     const getKey = localStorage.getItem("Users");
