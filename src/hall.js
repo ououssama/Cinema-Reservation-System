@@ -20,6 +20,13 @@ export function Hall(props) {
     }
   });
 
+  const getHall = (event) => {
+    const hallID = parseInt(
+      event.target.options[event.target.selectedIndex].value,
+    );
+    setHall(hallID);
+  };
+
   // this function run when a seat is reserved and it disable the seat element and change the color
   const lockResDialog = () => {
     document
@@ -88,30 +95,28 @@ export function Hall(props) {
   };
 
   useEffect(() => {
-    console.log(bottomSeat);
-  }, []);
-
-  useEffect(() => {
     // console.log(seat);
-    document.querySelector(".reservation-container").classList.remove("lock");
-    document.querySelector(".reservation-container").classList.add("hidden");
+    if (hall) {
+      document.querySelector(".reservation-container").classList.remove("lock");
+      document.querySelector(".reservation-container").classList.add("hidden");
 
-    const myArray = new Array(...topSeat);
-    for (let i = 0; i < topSeat.length; i++) {
-      if (topSeat[i] === undefined) {
-        let newValue;
-        if (seatCollection.length) {
-          newValue = myArray.splice(
-            i,
-            seatCollection.length,
-            ...seatCollection,
-          );
+      const myArray = new Array(...topSeat);
+      for (let i = 0; i < topSeat.length; i++) {
+        if (topSeat[i] === undefined) {
+          let newValue;
+          if (seatCollection.length) {
+            newValue = myArray.splice(
+              i,
+              seatCollection.length,
+              ...seatCollection,
+            );
+          }
+          break;
         }
-        break;
       }
-    }
 
-    setTopSeat(myArray);
+      setTopSeat(myArray);
+    }
   }, [seat]);
 
   useEffect(() => {
@@ -120,167 +125,180 @@ export function Hall(props) {
     //console.log("top seat", seatCollection.Seats.some(e => e.user ===0));
   }, [seatCollection]);
 
+  useEffect(() => {
+    console.log(hall);
+  }, [hall]);
+
   return (
     <div className="hall-container">
       <Toast visible={props.isUserAdded} message="Account created" />
       <label className="select-input-container" for="hall">
         Hall
-        <select className="input-primary" id="hall" name="hall">
-          <option selected disabled value={0}>
+        <select
+          className="input-primary"
+          id="hall"
+          name="hall"
+          onChange={(e) => getHall(e)}
+        >
+          <option selected disabled>
             Choose a hall
           </option>
           <option value={props.hallId}>{props.hallId}</option>
         </select>
       </label>
-      <div className="screen"></div>
-      <div className="seats-wrapper">
-        <div className="seat-bottom">
-          <div id="A" className="seats-group">
-            {[...bottomSeat[0].keys()].map((seat, i) => (
-              <div
-                key={i}
-                id={`H${props.hallId}B${seat}-A`}
-                className={`seat ${
-                  seatCollection?.Seats &&
-                  seatCollection?.Seats.some(
-                    (data) =>
-                      data.resId === `H${props.hallId}B${seat}-A` &&
-                      data.level == 1,
-                  )
-                    ? seatCollection?.Seats.some(
+      {hall !== null ? (
+        <>
+          <div className="screen"></div>
+          <div className="seats-wrapper">
+            <div className="seat-bottom">
+              <div id="A" className="seats-group">
+                {[...bottomSeat[0].keys()].map((seat, i) => (
+                  <div
+                    key={i}
+                    id={`H${props.hallId}B${seat}-A`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
                         (data) =>
-                          data.user === props.currentUser &&
                           data.resId === `H${props.hallId}B${seat}-A` &&
-                          data.level === 1,
+                          data.level == 1,
                       )
-                      ? " select"
-                      : " disable"
-                    : ""
-                }`}
-                onClickCapture={(e) =>
-                  setSeat({
-                    resId: e.target.id,
-                    user: props.currentUser,
-                    level: 1,
-                  })
-                }
-                onClick={() => lockResDialog()}
-              ></div>
-            ))}
-          </div>
-          <div id="B" className="seats-group">
-            {[...bottomSeat[1].keys()].map((seat, i) => (
-              <div
-                key={i}
-                id={`H${props.hallId}B${seat}-B`}
-                className={`seat ${
-                  seatCollection?.Seats &&
-                  seatCollection?.Seats.some(
-                    (data) =>
-                      data.resId === `H${props.hallId}B${seat}-B` &&
-                      data.level == 1,
-                  )
-                    ? seatCollection?.Seats.some(
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === `H${props.hallId}B${seat}-A` &&
+                              data.level === 1,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 1,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                  ></div>
+                ))}
+              </div>
+              <div id="B" className="seats-group">
+                {[...bottomSeat[1].keys()].map((seat, i) => (
+                  <div
+                    key={i}
+                    id={`H${props.hallId}B${seat}-B`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
                         (data) =>
-                          data.user === props.currentUser &&
                           data.resId === `H${props.hallId}B${seat}-B` &&
-                          data.level === 1,
+                          data.level == 1,
                       )
-                      ? " select"
-                      : " disable"
-                    : ""
-                }`}
-                onClickCapture={(e) =>
-                  setSeat({
-                    resId: e.target.id,
-                    user: props.currentUser,
-                    level: 1,
-                  })
-                }
-                onClick={() => lockResDialog()}
-              ></div>
-            ))}
-          </div>
-          <div id="C" className="seats-group">
-            {[...bottomSeat[2].keys()].map((seat, i) => (
-              <div
-                key={i}
-                id={`H${props.hallId}B${seat}-C`}
-                className={`seat ${
-                  seatCollection?.Seats &&
-                  seatCollection?.Seats.some(
-                    (data) =>
-                      data.resId === `H${props.hallId}B${seat}-C` &&
-                      data.level == 1,
-                  )
-                    ? seatCollection?.Seats.some(
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === `H${props.hallId}B${seat}-B` &&
+                              data.level === 1,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 1,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                  ></div>
+                ))}
+              </div>
+              <div id="C" className="seats-group">
+                {[...bottomSeat[2].keys()].map((seat, i) => (
+                  <div
+                    key={i}
+                    id={`H${props.hallId}B${seat}-C`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
                         (data) =>
-                          data.user === props.currentUser &&
                           data.resId === `H${props.hallId}B${seat}-C` &&
-                          data.level === 1,
+                          data.level == 1,
                       )
-                      ? " select"
-                      : " disable"
-                    : ""
-                }`}
-                onClickCapture={(e) =>
-                  setSeat({
-                    resId: e.target.id,
-                    user: props.currentUser,
-                    level: 1,
-                  })
-                }
-                onClick={() => lockResDialog()}
-              ></div>
-            ))}
-          </div>
-        </div>
-        <div className="seat-top">
-          <div className="seats-group">
-            {[...topSeat.keys()]?.map((seat) => (
-              <div
-                key={seat}
-                id={`H${props.hallId}T${seat}`}
-                className={`seat ${
-                  seatCollection?.Seats &&
-                  seatCollection?.Seats.some(
-                    (data) =>
-                      data.resId == "H" + props.hallId + "T" + seat &&
-                      data.level == 0,
-                  )
-                    ? seatCollection?.Seats.some(
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === `H${props.hallId}B${seat}-C` &&
+                              data.level === 1,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 1,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <div className="seat-top">
+              <div className="seats-group">
+                {[...topSeat.keys()]?.map((seat) => (
+                  <div
+                    key={seat}
+                    id={`H${props.hallId}T${seat}`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
                         (data) =>
-                          data.user === props.currentUser &&
-                          data.resId === "H" + props.hallId + "T" + seat &&
+                          data.resId == "H" + props.hallId + "T" + seat &&
                           data.level == 0,
                       )
-                      ? " select"
-                      : " disable"
-                    : ""
-                }`}
-                onClickCapture={(e) =>
-                  setSeat({
-                    resId: e.target.id,
-                    user: props.currentUser,
-                    level: 0,
-                  })
-                }
-                onClick={() => lockResDialog()}
-                // onMouseOut={() => unlockResDialog()}
-              ></div>
-            ))}
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === "H" + props.hallId + "T" + seat &&
+                              data.level == 0,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 0,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                    // onMouseOut={() => unlockResDialog()}
+                  ></div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      {
-        <Reservation
-          seat={seat}
-          getSeat={selectSet}
-          cancelSeat={cancelSeat}
-          currentUser={props.currentUser}
-          reservedSeats={seatCollection}
-        />
-      }
+          <Reservation
+            seat={seat}
+            getSeat={selectSet}
+            cancelSeat={cancelSeat}
+            currentUser={props.currentUser}
+            reservedSeats={seatCollection}
+          />
+        </>
+      ) : (
+        <div>Please choose a hall</div>
+      )}
     </div>
   );
 }
