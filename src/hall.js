@@ -3,8 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import Toast from "./Widgets/toast";
 
 export function Hall(props) {
-  //TODO: change data structure for seats reservation to contains seat resevation id and person who reserve seat
+  const [hall, setHall] = useState(null);
   const [seat, setSeat] = useState({ resId: "H1T1", user: 1 });
+  const [bottomSeat, setBottomSeat] = useState([
+    new Array(21),
+    new Array(21),
+    new Array(21),
+  ]);
   const [topSeat, setTopSeat] = useState(new Array(18));
   const [seatCollection, setSeatCollection] = useState(() => {
     const dataStorage = localStorage.getItem("seat_number");
@@ -15,9 +20,18 @@ export function Hall(props) {
     }
   });
 
+  const getHall = (event) => {
+    const hallID = parseInt(
+      event.target.options[event.target.selectedIndex].value,
+    );
+    setHall(hallID);
+  };
+
   // this function run when a seat is reserved and it disable the seat element and change the color
   const lockResDialog = () => {
-    // console.log(document.querySelector(".seat"));
+    document
+      .querySelectorAll(".seat")
+      .forEach((elem) => (elem.style.backgroundColor = "#ababab"));
     if (
       !document
         .querySelector(".reservation-container")
@@ -30,6 +44,9 @@ export function Hall(props) {
             ? (elem.style.backgroundColor = "#ababab")
             : null
         ); */
+      document
+        .querySelectorAll(".seat")
+        .forEach((elem) => (elem.style.backgroundColor = ""));
       document.getElementById(seat.resId).style.backgroundColor = "#8b8b8b";
       document.querySelector(".reservation-container").classList.add("lock");
       document
@@ -53,34 +70,6 @@ export function Hall(props) {
     updateSeats(myArray);
   };
 
-  useEffect(() => {
-    // console.log(seat);
-    document.querySelector(".reservation-container").classList.remove("lock");
-    document.querySelector(".reservation-container").classList.add("hidden");
-    const myArray = new Array(...topSeat);
-    for (let i = 0; i < topSeat.length; i++) {
-      if (topSeat[i] === undefined) {
-        let newValue;
-        if (seatCollection.length) {
-          newValue = myArray.splice(
-            i,
-            seatCollection.length,
-            ...seatCollection,
-          );
-        }
-        break;
-      }
-    }
-
-    setTopSeat(myArray);
-  }, [seat]);
-
-  useEffect(() => {
-    localStorage.setItem("seat_number", JSON.stringify(seatCollection));
-    reserveSeat(topSeat, setTopSeat, seat);
-    //console.log("top seat", seatCollection.Seats.some(e => e.user ===0));
-  }, [seatCollection]);
-
   const selectSet = (data) => {
     // if (seatCollection?.find(elem => elem == data)) {
     setSeatCollection((prev) => ({ Seats: [...prev.Seats, data] }));
@@ -91,18 +80,11 @@ export function Hall(props) {
   };
 
   const cancelSeat = (resId) => {
-    console.log("resId", resId);
     let modifiedArray;
     const filtredSeat = () => {
       let newArray = [];
-      console.log("before loop");
       for (let i = 0; i < seatCollection.Seats.length; i++) {
-        console.log(
-          "Seat Collection a",
-          seatCollection.Seats[i].resId !== resId,
-        );
         if (seatCollection.Seats[i].resId !== resId) {
-          console.log("Seat Collection filtred", seatCollection.Seats[i]);
           newArray.push(seatCollection.Seats[i]);
         }
       }
@@ -112,140 +94,211 @@ export function Hall(props) {
     setSeatCollection({ Seats: modifiedArray });
   };
 
-  // const unlockResDialog = () => {
-  //   document.querySelector(".reservation-container").classList.remove("lock");
-  //   document.querySelector(".reservation-container").classList.add("hidden");
-  // };
-  // useEffect(() => {
-  //   document.querySelector(".reservation-container").classList.remove("lock");
-  // }, [seat]);
+  useEffect(() => {
+    // console.log(seat);
+    if (hall) {
+      document.querySelector(".reservation-container").classList.remove("lock");
+      document.querySelector(".reservation-container").classList.add("hidden");
+
+      const myArray = new Array(...topSeat);
+      for (let i = 0; i < topSeat.length; i++) {
+        if (topSeat[i] === undefined) {
+          let newValue;
+          if (seatCollection.length) {
+            newValue = myArray.splice(
+              i,
+              seatCollection.length,
+              ...seatCollection,
+            );
+          }
+          break;
+        }
+      }
+
+      setTopSeat(myArray);
+    }
+  }, [seat]);
+
+  useEffect(() => {
+    localStorage.setItem("seat_number", JSON.stringify(seatCollection));
+    reserveSeat(topSeat, setTopSeat, seat);
+    //console.log("top seat", seatCollection.Seats.some(e => e.user ===0));
+  }, [seatCollection]);
+
+  useEffect(() => {
+    console.log(hall);
+  }, [hall]);
 
   return (
     <div className="hall-container">
-      <Toast visible={false} message="Account created" />
-      <p>Hall: {props.hallId}</p>
-      <div className="screen"></div>
-      <div className="seats-wrapper">
-        <div className="seat-bottom">
-          <div className="seats-group">
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-          </div>
-          <div className="seats-group">
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-          </div>
-          <div className="seats-group">
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-            <div className="seat"></div>
-          </div>
-        </div>
-        <div className="seat-top">
-          <div className="seats-group">
-            {[...topSeat.keys()]?.map((seat) => (
-              <div
-                key={seat}
-                style={{ fontSize: "6px" }}
-                id={`H${props.hallId}T${seat}`}
-                className={`seat ${
-                  seatCollection?.Seats &&
-                  seatCollection?.Seats.some(
-                    (e) => e.resId == "H" + props.hallId + "T" + seat,
-                  )
-                    ? seatCollection?.Seats.some(
-                        (e) =>
-                          e.user === props.currentUser &&
-                          e.resId === "H" + props.hallId + "T" + seat,
+      <Toast visible={props.isUserAdded} message="Account created" />
+      <label className="select-input-container" for="hall">
+        Hall
+        <select
+          className="input-primary"
+          id="hall"
+          name="hall"
+          onChange={(e) => getHall(e)}
+        >
+          <option selected disabled>
+            Choose a hall
+          </option>
+          <option value={props.hallId}>{props.hallId}</option>
+        </select>
+      </label>
+      {hall !== null ? (
+        <>
+          <div className="screen"></div>
+          <div className="seats-wrapper">
+            <div className="seat-bottom">
+              <div id="A" className="seats-group">
+                {[...bottomSeat[0].keys()].map((seat, i) => (
+                  <div
+                    key={i}
+                    id={`H${props.hallId}B${seat}-A`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
+                        (data) =>
+                          data.resId === `H${props.hallId}B${seat}-A` &&
+                          data.level == 1,
                       )
-                      ? " select"
-                      : " disable"
-                    : ""
-                }`}
-                onClickCapture={(e) =>
-                  setSeat({ resId: e.target.id, user: props.currentUser })
-                }
-                onClick={() => lockResDialog()}
-                // onMouseOut={() => unlockResDialog()}
-              ></div>
-            ))}
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === `H${props.hallId}B${seat}-A` &&
+                              data.level === 1,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 1,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                  ></div>
+                ))}
+              </div>
+              <div id="B" className="seats-group">
+                {[...bottomSeat[1].keys()].map((seat, i) => (
+                  <div
+                    key={i}
+                    id={`H${props.hallId}B${seat}-B`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
+                        (data) =>
+                          data.resId === `H${props.hallId}B${seat}-B` &&
+                          data.level == 1,
+                      )
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === `H${props.hallId}B${seat}-B` &&
+                              data.level === 1,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 1,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                  ></div>
+                ))}
+              </div>
+              <div id="C" className="seats-group">
+                {[...bottomSeat[2].keys()].map((seat, i) => (
+                  <div
+                    key={i}
+                    id={`H${props.hallId}B${seat}-C`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
+                        (data) =>
+                          data.resId === `H${props.hallId}B${seat}-C` &&
+                          data.level == 1,
+                      )
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === `H${props.hallId}B${seat}-C` &&
+                              data.level === 1,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 1,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <div className="seat-top">
+              <div className="seats-group">
+                {[...topSeat.keys()]?.map((seat) => (
+                  <div
+                    key={seat}
+                    id={`H${props.hallId}T${seat}`}
+                    className={`seat ${
+                      seatCollection?.Seats &&
+                      seatCollection?.Seats.some(
+                        (data) =>
+                          data.resId == "H" + props.hallId + "T" + seat &&
+                          data.level == 0,
+                      )
+                        ? seatCollection?.Seats.some(
+                            (data) =>
+                              data.user === props.currentUser &&
+                              data.resId === "H" + props.hallId + "T" + seat &&
+                              data.level == 0,
+                          )
+                          ? " select"
+                          : " disable"
+                        : ""
+                    }`}
+                    onClickCapture={(e) =>
+                      setSeat({
+                        resId: e.target.id,
+                        user: props.currentUser,
+                        level: 0,
+                      })
+                    }
+                    onClick={() => lockResDialog()}
+                    // onMouseOut={() => unlockResDialog()}
+                  ></div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      {
-        <Reservation
-          seat={seat}
-          getSeat={selectSet}
-          cancelSeat={cancelSeat}
-          currentUser={props.currentUser}
-          reservedSeats={seatCollection}
-        />
-      }
-      <div>
-        {seatCollection?.Seats &&
-          seatCollection?.Seats.map((s, i) => (
-            <span style={{ marginInline: 5 }} key={i}>
-              {s.resId}
-            </span>
-          ))}
-      </div>
-      {/* {JSON.parse(localStorage.getItem("seat_number"))?.map((s) => s)} */}
+          <Reservation
+            seat={seat}
+            getSeat={selectSet}
+            cancelSeat={cancelSeat}
+            currentUser={props.currentUser}
+            reservedSeats={seatCollection}
+          />
+        </>
+      ) : (
+        <div>Please choose a hall</div>
+      )}
     </div>
   );
 }

@@ -5,11 +5,8 @@ export default function Toast(props) {
   const progressBarRef = useRef();
   const toastRef = useRef();
 
-  // TODO: Function that toggles toast visibility
-  const toggleVisibility = () => {};
-
   useEffect(() => {
-    if (!props.visible) {
+    if (props.visible) {
       toastRef.current.style.display = "block";
       progressBarRef.current.style["animation-play-state"] = "running";
       setTimeout(() => {
