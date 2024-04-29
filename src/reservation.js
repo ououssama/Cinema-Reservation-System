@@ -13,14 +13,21 @@ export function Reservation(props) {
     }
   };
 
-  const selectReservation = (s) => {
-    document.getElementById(s).classList.add("disable");
-    return s && props.getSeat({ resId: s, user: props.currentUser });
+  const selectReservation = (resSeat, levelHall) => {
+    document.getElementById(resSeat).classList.add("disable");
+    return (
+      resSeat &&
+      props.getSeat({
+        resId: resSeat,
+        user: props.currentUser,
+        level: levelHall,
+      })
+    );
   };
 
-  const cancelReservation = (id) => {
+  const cancelReservation = (id, seatLevel) => {
     document.getElementById(id).classList.remove("select");
-    return props.cancelSeat(id);
+    return props.cancelSeat(id, seatLevel);
   };
 
   useEffect(() => {
@@ -90,12 +97,18 @@ export function Reservation(props) {
         props.reservedSeats.Seats.some((e) => e.resId == props.seat.resId) ? (
           <button
             className="cancel-btn"
-            onClick={() => cancelReservation(props.seat.resId)}
+            onClick={() =>
+              cancelReservation(props.seat.resId, props.seat.level)
+            }
           >
             cancel
           </button>
         ) : (
-          <button onClick={() => selectReservation(props.seat.resId)}>
+          <button
+            onClick={() =>
+              selectReservation(props.seat.resId, props.seat.level)
+            }
+          >
             Select
           </button>
         )}

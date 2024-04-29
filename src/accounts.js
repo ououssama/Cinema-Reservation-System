@@ -1,4 +1,4 @@
-import Login from "./login";
+import Register from "./register";
 import { useState, useEffect, useRef, useInsertionEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -27,9 +27,13 @@ export default function Accounts(props) {
     return props.getUser(userId);
   };
 
-  const toggleLoginVisibilty = () => {
-    dropDownAccountList.current.classList.add("hidden");
-    setLoginVisibility((prev) => !prev);
+  const toggleLoginVisibilty = (data) => {
+    if (data) {
+      setLoginVisibility(false);
+    } else {
+      dropDownAccountList.current.classList.add("hidden");
+      setLoginVisibility(true);
+    }
   };
 
   useEffect(() => {
@@ -125,9 +129,9 @@ export default function Accounts(props) {
           </div>
         </div>
       </div>
-      <Login
+      <Register
         visibility={loginVisibility}
-        close={setLoginVisibility}
+        close={toggleLoginVisibilty}
         triggerAddedUser={props.triggerAddedUser}
       />
     </div>

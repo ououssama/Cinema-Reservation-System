@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Toast from "./Widgets/toast";
 
 export function Hall(props) {
-  //TODO: change data structure for seats reservation to contains seat resevation id and person who reserve seat
+  const [hall, setHall] = useState(null);
   const [seat, setSeat] = useState({ resId: "H1T1", user: 1 });
   const [bottomSeat, setBottomSeat] = useState([
     new Array(21),
@@ -72,8 +72,7 @@ export function Hall(props) {
     // localStorage.removeItem("seat_number");
   };
 
-  const cancelSeat = (resId, seatPosition, seatGroup = null) => {
-    console.log("resId", resId);
+  const cancelSeat = (resId) => {
     let modifiedArray;
     const filtredSeat = () => {
       let newArray = [];
@@ -124,7 +123,15 @@ export function Hall(props) {
   return (
     <div className="hall-container">
       <Toast visible={props.isUserAdded} message="Account created" />
-      <p>Hall: {props.hallId}</p>
+      <label className="select-input-container" for="hall">
+        Hall
+        <select className="input-primary" id="hall" name="hall">
+          <option selected disabled value={0}>
+            Choose a hall
+          </option>
+          <option value={props.hallId}>{props.hallId}</option>
+        </select>
+      </label>
       <div className="screen"></div>
       <div className="seats-wrapper">
         <div className="seat-bottom">
@@ -133,7 +140,31 @@ export function Hall(props) {
               <div
                 key={i}
                 id={`H${props.hallId}B${seat}-A`}
-                className="seat"
+                className={`seat ${
+                  seatCollection?.Seats &&
+                  seatCollection?.Seats.some(
+                    (data) =>
+                      data.resId === `H${props.hallId}B${seat}-A` &&
+                      data.level == 1,
+                  )
+                    ? seatCollection?.Seats.some(
+                        (data) =>
+                          data.user === props.currentUser &&
+                          data.resId === `H${props.hallId}B${seat}-A` &&
+                          data.level === 1,
+                      )
+                      ? " select"
+                      : " disable"
+                    : ""
+                }`}
+                onClickCapture={(e) =>
+                  setSeat({
+                    resId: e.target.id,
+                    user: props.currentUser,
+                    level: 1,
+                  })
+                }
+                onClick={() => lockResDialog()}
               ></div>
             ))}
           </div>
@@ -142,7 +173,31 @@ export function Hall(props) {
               <div
                 key={i}
                 id={`H${props.hallId}B${seat}-B`}
-                className="seat"
+                className={`seat ${
+                  seatCollection?.Seats &&
+                  seatCollection?.Seats.some(
+                    (data) =>
+                      data.resId === `H${props.hallId}B${seat}-B` &&
+                      data.level == 1,
+                  )
+                    ? seatCollection?.Seats.some(
+                        (data) =>
+                          data.user === props.currentUser &&
+                          data.resId === `H${props.hallId}B${seat}-B` &&
+                          data.level === 1,
+                      )
+                      ? " select"
+                      : " disable"
+                    : ""
+                }`}
+                onClickCapture={(e) =>
+                  setSeat({
+                    resId: e.target.id,
+                    user: props.currentUser,
+                    level: 1,
+                  })
+                }
+                onClick={() => lockResDialog()}
               ></div>
             ))}
           </div>
@@ -151,7 +206,31 @@ export function Hall(props) {
               <div
                 key={i}
                 id={`H${props.hallId}B${seat}-C`}
-                className="seat"
+                className={`seat ${
+                  seatCollection?.Seats &&
+                  seatCollection?.Seats.some(
+                    (data) =>
+                      data.resId === `H${props.hallId}B${seat}-C` &&
+                      data.level == 1,
+                  )
+                    ? seatCollection?.Seats.some(
+                        (data) =>
+                          data.user === props.currentUser &&
+                          data.resId === `H${props.hallId}B${seat}-C` &&
+                          data.level === 1,
+                      )
+                      ? " select"
+                      : " disable"
+                    : ""
+                }`}
+                onClickCapture={(e) =>
+                  setSeat({
+                    resId: e.target.id,
+                    user: props.currentUser,
+                    level: 1,
+                  })
+                }
+                onClick={() => lockResDialog()}
               ></div>
             ))}
           </div>
@@ -165,19 +244,26 @@ export function Hall(props) {
                 className={`seat ${
                   seatCollection?.Seats &&
                   seatCollection?.Seats.some(
-                    (e) => e.resId == "H" + props.hallId + "T" + seat,
+                    (data) =>
+                      data.resId == "H" + props.hallId + "T" + seat &&
+                      data.level == 0,
                   )
                     ? seatCollection?.Seats.some(
-                        (e) =>
-                          e.user === props.currentUser &&
-                          e.resId === "H" + props.hallId + "T" + seat,
+                        (data) =>
+                          data.user === props.currentUser &&
+                          data.resId === "H" + props.hallId + "T" + seat &&
+                          data.level == 0,
                       )
                       ? " select"
                       : " disable"
                     : ""
                 }`}
                 onClickCapture={(e) =>
-                  setSeat({ resId: e.target.id, user: props.currentUser })
+                  setSeat({
+                    resId: e.target.id,
+                    user: props.currentUser,
+                    level: 0,
+                  })
                 }
                 onClick={() => lockResDialog()}
                 // onMouseOut={() => unlockResDialog()}
@@ -195,15 +281,6 @@ export function Hall(props) {
           reservedSeats={seatCollection}
         />
       }
-      <div>
-        {seatCollection?.Seats &&
-          seatCollection?.Seats.map((s, i) => (
-            <span style={{ marginInline: 5 }} key={i}>
-              {s.resId}
-            </span>
-          ))}
-      </div>
-      {/* {JSON.parse(localStorage.getItem("seat_number"))?.map((s) => s)} */}
     </div>
   );
 }

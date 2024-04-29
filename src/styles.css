@@ -60,6 +60,7 @@
 .App {
   font-family: sans-serif;
   text-align: center;
+  padding-inline: 1em;
 }
 
 .header {
@@ -72,6 +73,8 @@
   align-items: center;
   justify-content: center;
   row-gap: 20px;
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .screen {
@@ -408,4 +411,13 @@
   text-align: left;
   color: white;
   padding: 0 15px;
+}
+
+.select-input-container {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: 14px;
+  color: hwb(0 44% 56%);
 }
